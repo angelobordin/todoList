@@ -22,7 +22,7 @@ public class UserController {
     
     // DEFINE O METODO HTTPE SUB-ROTA DE ACESSO AO MÉTODO DA CLASSE;
     @PostMapping("/create")
-    public ResponseEntity<String> RegisterUser(@RequestBody UserModel user) {
+    public ResponseEntity registerUser(@RequestBody UserModel user) {
         var userExists = this.repository.findByUsername(user.getUsername());
         
         if (userExists != null) {
@@ -32,8 +32,8 @@ public class UserController {
         var passHash = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
         user.setPassword(passHash);
 
-        this.repository.save(user); 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Usuário criado com sucesso");
+        var userCreated = this.repository.save(user); 
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userCreated);
     }
 }
  
