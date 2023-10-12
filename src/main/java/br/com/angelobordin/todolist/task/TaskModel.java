@@ -14,22 +14,22 @@ import lombok.Data;
 @Data
 @Entity(name = "tb_task")
 public class TaskModel {
-    
+
     @Id
     @GeneratedValue(generator = "UUID")
     private UUID id;
-    
+
     @Column(length = 50)
     private String title;
-    
+
     private LocalDateTime start_at;
-    
+
     private LocalDateTime end_at;
-    
+
     private String priority;
-    
+
     @CreationTimestamp
     private LocalDateTime created_at;
 
-    private UUID user_id;
+    private UUID userId;
 }
