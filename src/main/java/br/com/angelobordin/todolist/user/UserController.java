@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 // DEFINE A CLASSE COMO REST(API);
 // DEFINE O PATH PARA EXECUTAR A CLASSE;
 @RestController
@@ -26,6 +28,9 @@ public class UserController {
         if (userExists != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário já cadastrado");
         }
+
+        var passHash = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
+        user.setPassword(passHash);
 
         this.repository.save(user); 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Usuário criado com sucesso");
