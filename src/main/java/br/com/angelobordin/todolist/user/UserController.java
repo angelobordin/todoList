@@ -1,5 +1,7 @@
 package br.com.angelobordin.todolist.user;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,9 +20,15 @@ public class UserController {
     
     // DEFINE O METODO HTTPE SUB-ROTA DE ACESSO AO MÉTODO DA CLASSE;
     @PostMapping("/create")
-    public String RegisterUser(@RequestBody UserModel user) {
-        this.repository.save(user);
-        return "Usuário criado com sucesso";
+    public ResponseEntity<String> RegisterUser(@RequestBody UserModel user) {
+        var userExists = this.repository.findByUsername(user.getUsername());
+        
+        if (userExists != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário já cadastrado");
+        }
+
+        this.repository.save(user); 
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Usuário criado com sucesso");
     }
 }
  
