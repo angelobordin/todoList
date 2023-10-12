@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.angelobordin.todolist.utils.Utils;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
@@ -57,7 +58,11 @@ public class TaskController {
     }
 
     @PutMapping("/update/{id}")
-    public void updateTask(@RequestBody TaskModel task, HttpServletRequest req, @PathVariable UUID id) {
+    public TaskModel updateTask(@RequestBody TaskModel newTaskData, HttpServletRequest req, @PathVariable UUID id) {
+        var oldTaskData = this.repository.findById(id).orElse(null);
 
+        Utils.copyNonNullProperties(newTaskData, oldTaskData);
+
+        return this.repository.save(oldTaskData);
     }
 }
