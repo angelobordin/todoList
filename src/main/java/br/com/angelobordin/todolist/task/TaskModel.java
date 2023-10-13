@@ -2,7 +2,6 @@ package br.com.angelobordin.todolist.task;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 import org.hibernate.annotations.CreationTimestamp;
 
