@@ -2,6 +2,7 @@ package br.com.angelobordin.todolist.task;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -32,4 +33,12 @@ public class TaskModel {
     private LocalDateTime created_at;
 
     private UUID userId;
+
+    public void setTitle(String title) throws Exception {
+        if (title.length() > 50) {
+            throw new Exception("O campo title deve conter no máximo 50 caractéres");
+        }
+
+        this.title = title;
+    }
 }
