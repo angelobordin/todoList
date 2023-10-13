@@ -58,11 +58,20 @@ public class TaskController {
     }
 
     @PutMapping("/update/{id}")
-    public TaskModel updateTask(@RequestBody TaskModel newTaskData, HttpServletRequest req, @PathVariable UUID id) {
+    public ResponseEntity updateTask(@RequestBody TaskModel newTaskData, HttpServletRequest req,
+            @PathVariable UUID id) {
         var oldTaskData = this.repository.findById(id).orElse(null);
+        if (oldTaskData == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tarefa não encontrada!");
+        }
+
+        if (!oldTaskData.getUserId().equals(req.getAttribute("userId"))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Usuário não possui permissão para alterar esta tarefa!");
+        }
 
         Utils.copyNonNullProperties(newTaskData, oldTaskData);
 
-        return this.repository.save(oldTaskData);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.repository.save(oldTaskData));
     }
 }
